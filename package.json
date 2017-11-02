@@ -8,6 +8,9 @@
     "start": "node server/server.js",
     "start-watch": "nodemon server/server.js"
   },
+  "engines": {
+    "node": "8.7.0"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
