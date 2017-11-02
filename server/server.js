@@ -18,6 +18,17 @@ io.on('connection', (socket) => {
 
 	socket.on('disconnect', () => {
 		console.log('User was disconnected');
+	});
+
+	//emit for both client and server
+	socket.emit('newMessage', {
+		from: 'Server',
+		text: 'Hey lets chat about your request',
+		createAt: Date()
+	});
+
+	socket.on('createMessage', (message) => {
+		console.log('data from client side', message);
 	})
 });
 
