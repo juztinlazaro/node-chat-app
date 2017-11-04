@@ -4,6 +4,18 @@ module.exports = function(io) {
 	io.on('connection', (socket) => {
 		console.log('new user connect');
 
+		socket.emit('newMessage', {
+			from: ' Admin',
+			text: `Welcome to the chat app`,
+			createAt: new Date().getTime()
+		});
+
+		socket.broadcast.emit('newMessage', {
+			from: 'Admin',
+			text: `New user join`,
+			createAt: new Date().getTime()
+		});
+
 		socket.on('disconnect', () => {
 			console.log('User was disconnected');
 		});
@@ -15,7 +27,13 @@ module.exports = function(io) {
 				text: message.text,
 				createAt: new Date().getTime()
 			});
-		})
+
+			// socket.broadcast.emit('newMessage', {
+			// 	from: message.from, 
+			// 	text: message.text,
+			// 	createAt: new Date().getTime()
+			// });
+		});
 	});
 }
 

@@ -1,5 +1,6 @@
 // starting / maintaining iniatite the request IO
 var socket = io();
+
 socket.on('connect', function() {
 	console.log('Connected to server');
 });
@@ -9,5 +10,5 @@ socket.on('disconnect', function() {
 });
 
 socket.on('newMessage', function(message) {
-  console.log(`message from ${message.from}:`, message);
+  console.log(`Newmeesage, message from ${message.from}:`, message);
 });
