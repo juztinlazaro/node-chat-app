@@ -1,38 +1,34 @@
 const socketIO = require('socket.io');
+const { generateMessage, generateLocationMessage } = require('../utils/message');
 
 module.exports = function(io) {
 	io.on('connection', (socket) => {
 		console.log('new user connect');
-
-		socket.emit('newMessage', {
-			from: ' Admin',
-			text: `Welcome to the chat app`,
-			createAt: new Date().getTime()
-		});
-
-		socket.broadcast.emit('newMessage', {
-			from: 'Admin',
-			text: `New user join`,
-			createAt: new Date().getTime()
-		});
-
+		//remind server one of the client has discoonn
 		socket.on('disconnect', () => {
-			console.log('User was disconnected');
+			socket.broadcast.emit('newMessage',  generateMessage('admin', '1 user discounted'));
 		});
 
-		socket.on('createMessage', (message) => {
-			console.log('data from client side', message);
-			io.emit('newMessage', {
-				from: message.from,
-				text: message.text,
-				createAt: new Date().getTime()
-			});
+		//emit all 
+		socket.emit('newMessage', generateMessage('admin', 'Welcome to the public chat'));
 
+		socket.broadcast.emit('newMessage',  generateMessage('admin', 'New user join'));
+
+		//event listener
+		socket.on('createMessage', (message, callback) => {
+			console.log('createMessage', message);
+			io.emit('newMessage', generateMessage(message.from, message.text));
+			callback('This is from the server');
 			// socket.broadcast.emit('newMessage', {
 			// 	from: message.from, 
 			// 	text: message.text,
 			// 	createAt: new Date().getTime()
 			// });
+		});
+
+		//listener for create location
+		socket.on('createLocationMessage', (coords) => {
+			io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
 		});
 	});
 }
